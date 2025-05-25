@@ -4,9 +4,9 @@ import { Search, User, ShoppingBag, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { useCart } from "@/hooks/useCart";
+import { useCart, CartProvider } from "@/hooks/useCart";
 
-const Header = () => {
+const HeaderContent = () => {
   const [location] = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -195,6 +195,15 @@ const Header = () => {
         </div>
       </div>
     </header>
+  );
+};
+
+// Wrap HeaderContent in CartProvider
+const Header = () => {
+  return (
+    <CartProvider>
+      <HeaderContent />
+    </CartProvider>
   );
 };
 
