@@ -17,9 +17,11 @@ const CategoryCard = ({ category }: CategoryCardProps) => {
       <div className="p-4 text-center">
         <h3 className="font-serif font-semibold text-lg mb-1">{category.name}</h3>
         <p className="text-gray-500 text-sm mb-3">{category.description}</p>
-        <Link href={`/categories/${category.slug}`} className="text-primary hover:text-primary/80 text-sm font-medium flex items-center justify-center">
-          Shop Collection
-          <ChevronRight className="h-4 w-4 ml-1" />
+        <Link href={`/categories/${category.slug}`}>
+          <a className="text-primary hover:text-primary/80 text-sm font-medium flex items-center justify-center">
+            Shop Collection
+            <ChevronRight className="h-4 w-4 ml-1" />
+          </a>
         </Link>
       </div>
     </div>
