@@ -1,0 +1,122 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Nunito:wght@300;400;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 20 14.3% 4.1%;
+  --muted: 60 4.8% 95.9%;
+  --muted-foreground: 25 5.3% 44.7%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 20 14.3% 4.1%;
+  --card: 0 0% 100%;
+  --card-foreground: 20 14.3% 4.1%;
+  --border: 20 5.9% 90%;
+  --input: 20 5.9% 90%;
+  
+  /* Primary color (Brown) */
+  --primary: 33 52% 36%; /* #8B5A2B */
+  --primary-light: 33 35% 49%; /* #A67C52 */
+  --primary-dark: 33 51% 28%; /* #6A4523 */
+  --primary-foreground: 0 0% 100%;
+  
+  /* Secondary color (Gold) */
+  --secondary: 46 67% 52%; /* #D4AF37 */
+  --secondary-light: 45 71% 62%; /* #E5C158 */
+  --secondary-dark: 46 71% 41%; /* #B3921F */
+  --secondary-foreground: 0 0% 100%;
+  
+  /* Accent color (Indian Red) */
+  --accent: 0 53% 58%; /* #CD5C5C */
+  --accent-light: 0 53% 67%; /* #D77E7E */
+  --accent-dark: 0 45% 48%; /* #B04545 */
+  --accent-foreground: 0 0% 100%;
+  
+  /* Neutral color (Cornsilk) */
+  --neutral: 48 100% 93%; /* #FFF8DC */
+  --neutral-dark: 48 67% 89%; /* #F5EED0 */
+  
+  /* Forest Green */
+  --forest: 120 64% 34%; /* #228B22 */
+  --forest-light: 120 50% 42%; /* #30A830 */
+  --forest-dark: 120 64% 25%; /* #176917 */
+  
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 60 9.1% 97.8%;
+  --ring: 33 52% 36%;
+  --radius: 0.5rem;
+}
+
+.dark {
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+  --muted: 240 3.7% 15.9%;
+  --muted-foreground: 240 5% 64.9%;
+  --popover: 240 10% 3.9%;
+  --popover-foreground: 0 0% 98%;
+  --card: 240 10% 3.9%;
+  --card-foreground: 0 0% 98%;
+  --border: 240 3.7% 15.9%;
+  --input: 240 3.7% 15.9%;
+  --primary: 33 52% 36%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 46 67% 52%;
+  --secondary-foreground: 0 0% 100%;
+  --accent: 0 53% 58%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --ring: 240 4.9% 83.9%;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply antialiased bg-neutral-50 text-gray-800 font-sans;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-sans font-bold;
+  }
+}
+
+@layer utilities {
+  .font-heading {
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  .font-body {
+    font-family: 'Nunito', sans-serif;
+  }
+}
+
+@layer components {
+  .product-card {
+    @apply transition-all duration-300;
+  }
+  
+  .product-card:hover {
+    @apply -translate-y-1 shadow-lg;
+  }
+  
+  .category-card:hover {
+    @apply scale-105 transition-transform duration-300;
+  }
+  
+  .btn-primary {
+    @apply bg-primary hover:bg-primary-dark text-white font-bold py-3 px-6 rounded-full transition duration-300 inline-flex items-center;
+  }
+  
+  .btn-secondary {
+    @apply bg-transparent hover:bg-secondary text-primary hover:text-white border-2 border-primary hover:border-secondary font-bold py-3 px-6 rounded-full transition duration-300;
+  }
+  
+  .btn-accent {
+    @apply bg-accent hover:bg-accent-dark text-white font-bold py-3 px-6 rounded-full transition duration-300 inline-flex items-center;
+  }
+}
