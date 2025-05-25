@@ -1,0 +1,134 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Base colors from design */
+  --primary: 15 68% 50%; /* #C45C3E */
+  --primary-foreground: 0 0% 100%; /* #FFFFFF */
+  
+  --secondary: 165 57% 30%; /* #217868 */
+  --secondary-foreground: 0 0% 100%; /* #FFFFFF */
+  
+  --accent: 45 75% 56%; /* #E5B73B */
+  --accent-foreground: 0 0% 100%; /* #FFFFFF */
+
+  /* UI Colors */
+  --background: 39 43% 93%; /* #F5F0E6 */
+  --foreground: 0 0% 20%; /* #333333 */
+  
+  --muted: 39 43% 93%; /* Lighter version of background */
+  --muted-foreground: 0 0% 45%; /* #737373 */
+  
+  --popover: 0 0% 100%; /* #FFFFFF */
+  --popover-foreground: 0 0% 20%; /* #333333 */
+  
+  --card: 0 0% 100%; /* #FFFFFF */
+  --card-foreground: 0 0% 20%; /* #333333 */
+  
+  --border: 30 6% 90%; /* #E8E6E2 */
+  --input: 30 6% 90%; /* #E8E6E2 */
+  
+  --destructive: 0 84% 60%; /* #EF4444 */
+  --destructive-foreground: 0 0% 100%; /* #FFFFFF */
+  
+  --ring: 15 68% 50%; /* Same as primary */
+
+  --radius: 0.5rem;
+
+  /* Chart colors (kept from default) */
+  --chart-1: 207 90% 54%;
+  --chart-2: 211 100% 99%;
+  --chart-3: 60 4.8% 95.9%;
+  --chart-4: 24 9.8% 10%;
+  --chart-5: 60 4.8% 95.9%;
+}
+
+.dark {
+  --background: 0 0% 15%; /* #262626 */
+  --foreground: 0 0% 98%; /* #FAFAFA */
+  
+  --muted: 0 0% 20%; /* #333333 */
+  --muted-foreground: 0 0% 65%; /* #A6A6A6 */
+  
+  --popover: 0 0% 12%; /* #1F1F1F */
+  --popover-foreground: 0 0% 98%; /* #FAFAFA */
+  
+  --card: 0 0% 12%; /* #1F1F1F */
+  --card-foreground: 0 0% 98%; /* #FAFAFA */
+  
+  --border: 0 0% 25%; /* #404040 */
+  --input: 0 0% 25%; /* #404040 */
+  
+  --primary: 15 68% 50%; /* #C45C3E - Keep same primary */
+  --primary-foreground: 0 0% 100%; /* #FFFFFF */
+  
+  --secondary: 165 57% 30%; /* #217868 - Keep same secondary */
+  --secondary-foreground: 0 0% 100%; /* #FFFFFF */
+  
+  --accent: 45 75% 56%; /* #E5B73B - Keep same accent */
+  --accent-foreground: 0 0% 100%; /* #FFFFFF */
+  
+  --destructive: 0 62% 30%; /* Darker red for dark mode */
+  --destructive-foreground: 0 0% 98%; /* #FAFAFA */
+  
+  --ring: 15 68% 50%; /* Same as primary */
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
+  }
+}
+
+.hero-gradient {
+  background: linear-gradient(to right, rgba(196, 92, 62, 0.9), rgba(33, 120, 104, 0.8));
+}
+
+.category-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary hover:bg-primary/90 text-white font-medium py-3 px-8 rounded-full text-center transition;
+  }
+
+  .btn-secondary {
+    @apply bg-white/20 hover:bg-white/30 text-white font-medium py-3 px-8 rounded-full text-center backdrop-blur-sm transition;
+  }
+
+  .btn-accent {
+    @apply bg-accent hover:bg-accent/90 text-white font-medium py-3 px-8 rounded-full transition;
+  }
+
+  .container-custom {
+    @apply container mx-auto px-4;
+  }
+
+  .section-title {
+    @apply text-3xl md:text-4xl font-serif font-bold mb-4;
+  }
+
+  .section-subtitle {
+    @apply text-gray-600 max-w-2xl mx-auto;
+  }
+}
