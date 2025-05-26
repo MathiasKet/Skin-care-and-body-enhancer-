@@ -489,12 +489,7 @@ export class MemStorage implements IStorage {
         image: "https://pixabay.com/get/g637c0bde2eee2b052478a9b77bd5ce6c33224266930c14944df191cbe67a1f20b8e0f44e6fdfabd5d0f1797dded68d7c0583997e677ca2aced7358c9f6c06948_1280.jpg",
         productCount: 32
       },
-      {
-        name: "Men's Grooming",
-        slug: "mens-grooming",
-        image: "https://pixabay.com/get/g84d47ed44a6fbf08d7d7c213440d5e3234fa053e6f4b323dd95a925311e2ec59d8afd54e3883641df2ade146b5dcf60cb808b1ceab488c8f25cc5570ac5434e6_1280.jpg",
-        productCount: 15
-      },
+
       {
         name: "Natural & Organic",
         slug: "natural-organic",
@@ -854,50 +849,7 @@ export class MemStorage implements IStorage {
         ],
         whatsIncluded: "1 x 100g Turmeric Brightening Mask in a sealed jar"
       },
-      {
-        name: "Men's Beard Grooming Oil",
-        slug: "mens-beard-grooming-oil",
-        sku: "SKU-008",
-        description: "Keep your beard looking its best with our nourishing beard oil. Made with a blend of natural oils that soften beard hair, relieve itchiness, and promote healthy growth. The light, masculine scent is subtle and appealing.",
-        shortDescription: "Conditions & softens beard hair",
-        price: 85.00,
-        originalPrice: null,
-        image: "https://images.unsplash.com/photo-1621607512022-6aecc4fed814?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400",
-        gallery: [],
-        categoryId: 4,
-        brandId: 1,
-        rating: 4.0,
-        reviewCount: 9,
-        stockStatus: "in_stock",
-        isBestSeller: false,
-        isNew: true,
-        isOrganic: false,
-        size: "30ml",
-        productType: "Beard Oil",
-        madeIn: "Ghana",
-        shelfLife: "12 months",
-        ingredients: "Jojoba Oil, Argan Oil, Coconut Oil, Shea Butter Oil, Vitamin E, Essential Oil Blend",
-        highlights: [
-          "Softens coarse beard hair and prevents itching",
-          "Promotes healthier beard growth",
-          "Subtle woody scent that's not overpowering"
-        ],
-        perfectFor: [
-          "All beard types, especially coarse or dry beards",
-          "Men experiencing beard itch or 'beardruff'",
-          "Conditioning new beard growth"
-        ],
-        whyGhanaLovesIt: "This oil is specifically formulated for the texture of African hair and beards. It's lightweight enough for our climate but powerful enough to tame the coarsest beards.",
-        importantNotes: "A little goes a long way - start with just a few drops. Apply to clean beard for best results.",
-        howToUse: [
-          "Place 3-5 drops in palm (more for longer beards)",
-          "Rub hands together to warm the oil",
-          "Work through beard from roots to tips",
-          "Use beard comb to distribute evenly",
-          "Apply daily, preferably after showering"
-        ],
-        whatsIncluded: "1 x 30ml Men's Beard Grooming Oil in a glass dropper bottle"
-      }
+
     ];
     
     for (const product of productsData) {
