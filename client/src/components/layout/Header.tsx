@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useCart } from "../cart/CartProvider";
+import logoImage from "@assets/IMG_7763.jpg";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -40,8 +41,15 @@ const Header = () => {
       <div className="container mx-auto px-4 py-4">
         <div className="flex flex-col md:flex-row md:justify-between md:items-center space-y-4 md:space-y-0">
           <div className="flex justify-between items-center">
-            <Link href="/" className="text-3xl font-bold text-primary font-heading">
-              Body<span className="text-accent">Enhance</span>
+            <Link href="/" className="flex items-center space-x-3">
+              <img 
+                src={logoImage} 
+                alt="Body Enhance & Skincare Hub" 
+                className="h-12 w-auto"
+              />
+              <span className="text-2xl font-bold text-primary font-heading hidden sm:block">
+                Body Enhance & Skincare Hub
+              </span>
             </Link>
             <Sheet>
               <SheetTrigger asChild>
@@ -55,7 +63,6 @@ const Header = () => {
                   <Link href="/shop/facial-skincare" className="text-lg font-medium hover:text-primary">Facial Skincare</Link>
                   <Link href="/shop/body-enhancement" className="text-lg font-medium hover:text-primary">Body Enhancement</Link>
                   <Link href="/shop/specialized-treatments" className="text-lg font-medium hover:text-primary">Specialized Treatments</Link>
-                  <Link href="/shop/mens-grooming" className="text-lg font-medium hover:text-primary">Men's Grooming</Link>
                   <Link href="/shop/natural-organic" className="text-lg font-medium hover:text-primary">Natural & Organic</Link>
                   <Link href="/about" className="text-lg font-medium hover:text-primary">About Us</Link>
                   <Link href="/consultation" className="text-lg font-medium hover:text-primary">Consultation</Link>

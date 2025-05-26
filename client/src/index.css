@@ -16,32 +16,32 @@
   --border: 20 5.9% 90%;
   --input: 20 5.9% 90%;
   
-  /* Primary color (Brown) */
-  --primary: 33 52% 36%; /* #8B5A2B */
-  --primary-light: 33 35% 49%; /* #A67C52 */
-  --primary-dark: 33 51% 28%; /* #6A4523 */
+  /* Primary color (Forest Green from logo) */
+  --primary: 120 65% 35%; /* #228B22 */
+  --primary-light: 120 55% 45%; /* #40A040 */
+  --primary-dark: 120 75% 25%; /* #1A6B1A */
   --primary-foreground: 0 0% 100%;
   
-  /* Secondary color (Gold) */
-  --secondary: 46 67% 52%; /* #D4AF37 */
-  --secondary-light: 45 71% 62%; /* #E5C158 */
-  --secondary-dark: 46 71% 41%; /* #B3921F */
+  /* Secondary color (Light Green) */
+  --secondary: 120 45% 55%; /* #5CB85C */
+  --secondary-light: 120 40% 65%; /* #7BC87B */
+  --secondary-dark: 120 50% 45%; /* #4A934A */
   --secondary-foreground: 0 0% 100%;
   
-  /* Accent color (Indian Red) */
-  --accent: 0 53% 58%; /* #CD5C5C */
-  --accent-light: 0 53% 67%; /* #D77E7E */
-  --accent-dark: 0 45% 48%; /* #B04545 */
+  /* Accent color (Fresh Green) */
+  --accent: 120 35% 65%; /* #7BC87B */
+  --accent-light: 120 30% 75%; /* #9AD39A */
+  --accent-dark: 120 40% 55%; /* #6BB36B */
   --accent-foreground: 0 0% 100%;
   
-  /* Neutral color (Cornsilk) */
-  --neutral: 48 100% 93%; /* #FFF8DC */
-  --neutral-dark: 48 67% 89%; /* #F5EED0 */
+  /* Neutral color (Soft Green-tinted) */
+  --neutral: 120 20% 96%; /* #F5F9F5 */
+  --neutral-dark: 120 15% 92%; /* #E8F4E8 */
   
-  /* Forest Green */
-  --forest: 120 64% 34%; /* #228B22 */
-  --forest-light: 120 50% 42%; /* #30A830 */
-  --forest-dark: 120 64% 25%; /* #176917 */
+  /* Forest Green (deep brand color) */
+  --forest: 120 70% 30%; /* #1E7B1E */
+  --forest-light: 120 60% 40%; /* #339933 */
+  --forest-dark: 120 80% 20%; /* #0F5F0F */
   
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 60 9.1% 97.8%;
