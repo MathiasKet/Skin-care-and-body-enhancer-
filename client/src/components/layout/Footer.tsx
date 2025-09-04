@@ -22,7 +22,6 @@ const Footer = () => {
               <li><Link href="/shop/facial-skincare" className="text-gray-300 hover:text-white transition">Facial Skincare</Link></li>
               <li><Link href="/shop/body-enhancement" className="text-gray-300 hover:text-white transition">Body Enhancement</Link></li>
               <li><Link href="/shop/specialized-treatments" className="text-gray-300 hover:text-white transition">Specialized Treatments</Link></li>
-              <li><Link href="/shop/mens-grooming" className="text-gray-300 hover:text-white transition">Men's Grooming</Link></li>
               <li><Link href="/shop/natural-organic" className="text-gray-300 hover:text-white transition">Natural & Organic</Link></li>
               <li><Link href="/shop?new=true" className="text-gray-300 hover:text-white transition">New Arrivals</Link></li>
             </ul>

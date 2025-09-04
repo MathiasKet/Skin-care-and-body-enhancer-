@@ -1,62 +1,95 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
-interface CartItem {
+export interface CartItem {
   id: number;
   name: string;
   price: number;
   image: string;
   quantity: number;
+  sku?: string;
+  brand?: string;
+  slug?: string;
 }
 
-interface CartContextType {
+export interface SavedItem extends Omit<CartItem, 'quantity'> {
+  savedAt: string;
+}
+
+export interface CartContextType {
   cartItems: CartItem[];
-  addToCart: (item: CartItem) => void;
+  savedItems: SavedItem[];
+  addToCart: (item: Omit<CartItem, 'quantity'>, quantity?: number) => void;
   removeFromCart: (id: number) => void;
   updateQuantity: (id: number, quantity: number) => void;
+  saveForLater: (id: number) => void;
+  moveToCart: (item: SavedItem) => void;
+  removeSavedItem: (id: number) => void;
   clearCart: () => void;
   isCartOpen: boolean;
   openCart: () => void;
   closeCart: () => void;
   subtotal: number;
+  itemCount: number;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [savedItems, setSavedItems] = useState<SavedItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   
-  // Load cart from localStorage on initial render
+  // Load cart and saved items from localStorage on initial render
   useEffect(() => {
-    const savedCart = localStorage.getItem("cart");
-    if (savedCart) {
+    const loadFromLocalStorage = () => {
       try {
-        setCartItems(JSON.parse(savedCart));
+        const savedCart = localStorage.getItem("cart");
+        if (savedCart) {
+          setCartItems(JSON.parse(savedCart));
+        }
+        
+        const savedForLater = localStorage.getItem("savedItems");
+        if (savedForLater) {
+          setSavedItems(JSON.parse(savedForLater));
+        }
       } catch (error) {
-        console.error("Failed to parse cart from localStorage:", error);
+        console.error("Failed to load cart/saved items from localStorage:", error);
+        // Reset to empty arrays if there's an error
+        setCartItems([]);
+        setSavedItems([]);
       }
-    }
+    };
+    
+    loadFromLocalStorage();
   }, []);
   
-  // Save cart to localStorage whenever it changes
+  // Save cart and saved items to localStorage whenever they change
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cartItems));
-  }, [cartItems]);
+    try {
+      localStorage.setItem("cart", JSON.stringify(cartItems));
+      localStorage.setItem("savedItems", JSON.stringify(savedItems));
+    } catch (error) {
+      console.error("Failed to save cart/saved items to localStorage:", error);
+    }
+  }, [cartItems, savedItems]);
   
-  const addToCart = (item: CartItem) => {
+  const addToCart = (item: Omit<CartItem, 'quantity'>, quantity: number = 1) => {
     setCartItems(prevItems => {
       const existingItem = prevItems.find(i => i.id === item.id);
       
       if (existingItem) {
         return prevItems.map(i => 
           i.id === item.id 
-            ? { ...i, quantity: i.quantity + item.quantity } 
+            ? { ...i, quantity: i.quantity + quantity } 
             : i
         );
       } else {
-        return [...prevItems, item];
+        return [...prevItems, { ...item, quantity }];
       }
     });
+    
+    // Remove from saved items if it was there
+    setSavedItems(prev => prev.filter(i => i.id !== item.id));
     
     openCart();
   };
@@ -75,6 +108,31 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     );
   };
   
+  const saveForLater = (id: number) => {
+    const itemToSave = cartItems.find(item => item.id === id);
+    if (!itemToSave) return;
+
+    setCartItems(prev => prev.filter(item => item.id !== id));
+    
+    // Don't add duplicate saved items
+    setSavedItems(prev => {
+      const alreadyExists = prev.some(item => item.id === id);
+      if (alreadyExists) return prev;
+      
+      const { quantity, ...savedItem } = itemToSave;
+      return [...prev, { ...savedItem, savedAt: new Date().toISOString() }];
+    });
+  };
+
+  const moveToCart = (savedItem: SavedItem) => {
+    setSavedItems(prev => prev.filter(item => item.id !== savedItem.id));
+    addToCart(savedItem, 1);
+  };
+
+  const removeSavedItem = (id: number) => {
+    setSavedItems(prev => prev.filter(item => item.id !== id));
+  };
+
   const clearCart = () => {
     setCartItems([]);
   };
@@ -92,17 +150,27 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     0
   );
   
+  const itemCount = cartItems.reduce(
+    (total, item) => total + item.quantity, 
+    0
+  );
+  
   return (
     <CartContext.Provider value={{
       cartItems,
+      savedItems,
       addToCart,
       removeFromCart,
       updateQuantity,
+      saveForLater,
+      moveToCart,
+      removeSavedItem,
       clearCart,
       isCartOpen,
       openCart,
       closeCart,
-      subtotal
+      subtotal,
+      itemCount
     }}>
       {children}
     </CartContext.Provider>

@@ -1,15 +1,19 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "wouter";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useCart } from "../cart/CartProvider";
 import logoImage from "@assets/IMG_7763.jpg";
 
-const Header = () => {
+interface HeaderProps {
+  onCartOpenChange?: (open: boolean) => void;
+}
+
+const Header = ({ onCartOpenChange }: HeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [, navigate] = useLocation();
+  const navigate = useNavigate();
   const { cartItems } = useCart();
   
   const totalCartItems = cartItems.reduce((total, item) => total + item.quantity, 0);
@@ -31,8 +35,8 @@ const Header = () => {
             <span className="hidden md:inline"><i className="fas fa-envelope mr-1"></i> hello@bodyenhancehub.com</span>
           </div>
           <div className="flex space-x-4">
-            <Link href="/shipping" className="hover:text-secondary-light transition">Track Order</Link>
-            <a href="#" className="hover:text-secondary-light transition hidden sm:inline">Store Locator</a>
+            <Link to="/shipping" className="hover:text-secondary-light transition">Track Order</Link>
+            <Link to="/store-locator" className="hover:text-secondary-light transition hidden sm:inline">Store Locator</Link>
           </div>
         </div>
       </div>
@@ -41,7 +45,7 @@ const Header = () => {
       <div className="container mx-auto px-4 py-4">
         <div className="flex flex-col md:flex-row md:justify-between md:items-center space-y-4 md:space-y-0">
           <div className="flex justify-between items-center">
-            <Link href="/" className="flex items-center space-x-3">
+            <Link to="/" className="flex items-center space-x-3">
               <img 
                 src={logoImage} 
                 alt="Body Enhance & Skincare Hub" 
@@ -59,14 +63,14 @@ const Header = () => {
               </SheetTrigger>
               <SheetContent side="left">
                 <div className="flex flex-col gap-4 mt-8">
-                  <Link href="/" className="text-lg font-medium hover:text-primary">Home</Link>
-                  <Link href="/shop/facial-skincare" className="text-lg font-medium hover:text-primary">Facial Skincare</Link>
-                  <Link href="/shop/body-enhancement" className="text-lg font-medium hover:text-primary">Body Enhancement</Link>
-                  <Link href="/shop/specialized-treatments" className="text-lg font-medium hover:text-primary">Specialized Treatments</Link>
-                  <Link href="/shop/natural-organic" className="text-lg font-medium hover:text-primary">Natural & Organic</Link>
-                  <Link href="/about" className="text-lg font-medium hover:text-primary">About Us</Link>
-                  <Link href="/consultation" className="text-lg font-medium hover:text-primary">Consultation</Link>
-                  <Link href="/shipping" className="text-lg font-medium hover:text-primary">Shipping</Link>
+                  <Link to="/" className="text-lg font-medium hover:text-primary">Home</Link>
+                  <Link to="/shop/facial-skincare" className="text-lg font-medium hover:text-primary">Facial Skincare</Link>
+                  <Link to="/shop/body-enhancement" className="text-lg font-medium hover:text-primary">Body Enhancement</Link>
+                  <Link to="/shop/specialized-treatments" className="text-lg font-medium hover:text-primary">Specialized Treatments</Link>
+                  <Link to="/shop/natural-organic" className="text-lg font-medium hover:text-primary">Natural & Organic</Link>
+                  <Link to="/about" className="text-lg font-medium hover:text-primary">About Us</Link>
+                  <Link to="/consultation" className="text-lg font-medium hover:text-primary">Consultation</Link>
+                  <Link to="/shipping" className="text-lg font-medium hover:text-primary">Shipping</Link>
                 </div>
               </SheetContent>
             </Sheet>
@@ -86,23 +90,27 @@ const Header = () => {
           </div>
           
           <div className="flex justify-end space-x-4">
-            <Link href="/account" className="flex items-center hover:text-primary transition">
-              <i className="far fa-user text-xl"></i>
-              <span className="ml-1 hidden sm:inline">Account</span>
+            <Link to="/account" className="flex items-center text-gray-700 hover:text-primary">
+              <i className="fas fa-user text-xl"></i>
+              <span className="ml-2 hidden sm:inline">Account</span>
             </Link>
-            <Link href="/wishlist" className="flex items-center hover:text-primary transition">
-              <i className="far fa-heart text-xl"></i>
-              <span className="ml-1 hidden sm:inline">Wishlist</span>
+            <Link to="/wishlist" className="flex items-center text-gray-700 hover:text-primary">
+              <i className="fas fa-heart text-xl"></i>
+              <span className="ml-2 hidden sm:inline">Wishlist</span>
             </Link>
-            <Link href="/cart" className="flex items-center hover:text-primary transition relative">
+            <button 
+              onClick={() => onCartOpenChange?.(true)}
+              className="flex items-center hover:text-primary transition relative"
+            >
               <i className="fas fa-shopping-bag text-xl"></i>
+              <span className="ml-2 hidden sm:inline">Cart</span>
               <span className="ml-1 hidden sm:inline">Cart</span>
               {totalCartItems > 0 && (
                 <span className="absolute -top-2 -right-2 bg-accent text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                   {totalCartItems}
                 </span>
               )}
-            </Link>
+            </button>
           </div>
         </div>
       </div>
@@ -111,13 +119,12 @@ const Header = () => {
       <nav className="bg-white border-t border-b border-gray-200 hidden md:block">
         <div className="container mx-auto px-4">
           <ul className="flex flex-wrap justify-center space-x-1 md:space-x-6 text-sm md:text-base font-medium">
-            <li><Link href="/" className="block py-3 px-2 hover:text-primary transition">Home</Link></li>
-            <li><Link href="/shop/facial-skincare" className="block py-3 px-2 hover:text-primary transition">Facial Skincare</Link></li>
-            <li><Link href="/shop/body-enhancement" className="block py-3 px-2 hover:text-primary transition">Body Enhancement</Link></li>
-            <li><Link href="/shop/specialized-treatments" className="block py-3 px-2 hover:text-primary transition">Specialized Treatments</Link></li>
-            <li><Link href="/shop/mens-grooming" className="block py-3 px-2 hover:text-primary transition">Men's Grooming</Link></li>
-            <li><Link href="/shop/natural-organic" className="block py-3 px-2 hover:text-primary transition">Natural & Organic</Link></li>
-            <li><Link href="/shop?sale=true" className="block py-3 px-2 text-accent font-semibold">Sale</Link></li>
+            <li><Link to="/" className="block py-3 px-2 hover:text-primary transition">Home</Link></li>
+            <li><Link to="/shop/facial-skincare" className="block py-3 px-2 hover:text-primary transition">Facial Skincare</Link></li>
+            <li><Link to="/shop/body-enhancement" className="block py-3 px-2 hover:text-primary transition">Body Enhancement</Link></li>
+            <li><Link to="/shop/specialized-treatments" className="block py-3 px-2 hover:text-primary transition">Specialized Treatments</Link></li>
+            <li><Link to="/shop/natural-organic" className="block py-3 px-2 hover:text-primary transition">Natural & Organic</Link></li>
+            <li><Link to="/shop?sale=true" className="block py-3 px-2 text-accent font-semibold">Sale</Link></li>
           </ul>
         </div>
       </nav>

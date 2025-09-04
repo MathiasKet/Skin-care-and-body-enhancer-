@@ -1,0 +1,364 @@
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { 
+  Sheet, 
+  SheetContent, 
+  SheetHeader, 
+  SheetTitle, 
+  Button,
+  Input
+} from "@/components/ui";
+import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
+import { 
+  X, 
+  ShoppingBag, 
+  Trash2, 
+  Heart, 
+  ArrowLeft,
+  Tag,
+  Check,
+  Loader2,
+  Minus,
+  Plus,
+  ArrowRight
+} from "lucide-react";
+import { useCart } from "./CartProvider";
+import type { CartItem, SavedItem } from "./CartProvider";
+
+interface CartItemCardProps {
+  item: CartItem | SavedItem;
+  onRemove: () => void;
+  onUpdateQuantity?: (quantity: number) => void;
+  onSaveForLater?: () => void;
+  onMoveToCart?: () => void;
+  isSavedItem?: boolean;
+}
+
+const CartItemCard = ({
+  item,
+  onRemove,
+  onUpdateQuantity,
+  onSaveForLater,
+  onMoveToCart,
+  isSavedItem = false,
+}: CartItemCardProps) => {
+  return (
+    <motion.div
+      layout
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -20, transition: { duration: 0.2 } }}
+      className="flex items-start py-4 group"
+    >
+      <div className="relative flex-shrink-0 w-20 h-20 rounded-md overflow-hidden bg-muted">
+        <img 
+          src={item.image} 
+          alt={item.name} 
+          className="w-full h-full object-cover"
+        />
+      </div>
+      <div className="ml-4 flex-1">
+        <div className="flex justify-between">
+          <h4 className="font-medium text-foreground line-clamp-2">
+            {item.name}
+          </h4>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 -mt-2 -mr-2 text-muted-foreground hover:text-destructive"
+            onClick={onRemove}
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </div>
+        <p className="text-primary font-bold mt-1">GH₵{item.price.toFixed(2)}</p>
+        
+        {!isSavedItem && onUpdateQuantity && (
+          <div className="flex items-center justify-between mt-3">
+            <div className="flex items-center border rounded-md overflow-hidden">
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 rounded-none px-2"
+                onClick={() => onUpdateQuantity(Math.max(1, 'quantity' in item ? item.quantity - 1 : 1))}
+                disabled={'quantity' in item ? item.quantity <= 1 : false}
+              >
+                <Minus className="h-3 w-3" />
+              </Button>
+              <span className="w-8 text-center text-sm">
+                {'quantity' in item ? item.quantity : 1}
+              </span>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 rounded-none px-2"
+                onClick={() => onUpdateQuantity(('quantity' in item ? item.quantity : 1) + 1)}
+              >
+                <Plus className="h-3 w-3" />
+              </Button>
+            </div>
+            {onSaveForLater && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-muted-foreground hover:text-foreground"
+                onClick={onSaveForLater}
+              >
+                Save for later
+              </Button>
+            )}
+          </div>
+        )}
+        
+        {isSavedItem && onMoveToCart && (
+          <div className="mt-3">
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full"
+              onClick={onMoveToCart}
+            >
+              Move to cart
+            </Button>
+          </div>
+        )}
+      </div>
+    </motion.div>
+  );
+};
+
+interface CartSidebarProps {
+  isOpen: boolean;
+  onClose: () => void;
+  closeCart: () => void;
+}
+
+export const CartSidebar = ({ isOpen, onClose, closeCart }: CartSidebarProps) => {
+  const [isOpenInternal, setIsOpenInternal] = useState(isOpen);
+  const [activeTab, setActiveTab] = useState<'cart' | 'saved'>('cart');
+  const [promoCode, setPromoCode] = useState('');
+  const [promoApplied, setPromoApplied] = useState(false);
+  const [discount, setDiscount] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
+  
+  const { toast } = useToast();
+  const { 
+    cartItems = [], 
+    savedItems = [], 
+    subtotal = 0, 
+    clearCart = () => {}, 
+    saveForLater = () => {}, 
+    moveToCart = () => {}, 
+    removeFromCart = () => {}, 
+    removeSavedItem = () => {},
+    updateQuantity = () => {}
+  } = useCart() || {};
+
+  useEffect(() => {
+    setIsOpenInternal(isOpen);
+  }, [isOpen]);
+
+  const handleClose = () => {
+    setIsOpenInternal(false);
+    setTimeout(onClose, 300);
+  };
+
+  const applyPromoCode = () => {
+    if (!promoCode.trim()) return;
+
+    setIsLoading(true);
+    // Simulate API call
+    setTimeout(() => {
+      if (promoCode.toUpperCase() === 'SKINCARE10') {
+        setDiscount(10); // 10% discount
+        setPromoApplied(true);
+        toast({
+          title: 'Promo code applied!',
+          description: 'Your 10% discount has been applied to your order.',
+        });
+      } else {
+        toast({
+          title: 'Invalid promo code',
+          description: 'The promo code you entered is not valid.',
+          variant: 'destructive',
+        });
+      }
+      setIsLoading(false);
+    }, 1000);
+  };
+
+  const removePromoCode = () => {
+    setPromoCode('');
+    setPromoApplied(false);
+    setDiscount(0);
+  };
+
+  const calculateTotal = () => {
+    const subtotalWithDiscount = subtotal * (1 - discount / 100);
+    const shipping = subtotalWithDiscount >= 100 || subtotalWithDiscount === 0 ? 0 : 10;
+    return subtotalWithDiscount + shipping;
+  };
+
+  const handleCheckout = () => {
+    if (cartItems.length === 0) return;
+
+    setIsCheckingOut(true);
+    // Simulate checkout process
+    setTimeout(() => {
+      clearCart();
+      toast({
+        title: "Order Placed!",
+        description: "Your order has been placed successfully.",
+      });
+      closeCart();
+      setIsCheckingOut(false);
+    }, 1500);
+  };
+
+  const handleSaveForLater = (id: number) => {
+    saveForLater(id);
+    toast({
+      title: "Saved for later",
+      description: "Item has been moved to your saved items.",
+    });
+  };
+
+  const handleMoveToCart = (item: SavedItem) => {
+    moveToCart(item);
+    toast({
+      title: "Moved to cart",
+      description: "Item has been added to your cart.",
+    });
+  };
+
+  const handleRemoveFromCart = (id: number) => {
+    removeFromCart(id);
+    toast({
+      title: "Removed from cart",
+      description: "Item has been removed from your cart.",
+    });
+  };
+
+  const handleRemoveSavedItem = (id: number) => {
+    removeSavedItem(id);
+    toast({
+      title: "Removed",
+      description: "Item has been removed from your saved items.",
+    });
+  };
+
+  const hasItems = cartItems.length > 0;
+  const hasSavedItems = savedItems.length > 0;
+  const total = calculateTotal();
+
+  const renderCartItems = () => {
+    if (isLoading) {
+      return (
+        <div className="space-y-4">
+          {[1, 2].map((i) => (
+            <div key={i} className="flex gap-4 p-4 border rounded-lg">
+              <div className="bg-muted animate-pulse h-24 w-24 rounded-md" />
+              <div className="flex-1 space-y-2">
+                <div className="h-4 bg-muted rounded w-3/4 animate-pulse" />
+                <div className="h-3 bg-muted rounded w-1/4 animate-pulse" />
+                <div className="h-8 w-24 bg-muted rounded-md animate-pulse mt-2" />
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    if (!hasItems) {
+      return (
+        <div className="flex flex-col items-center justify-center py-12 px-4">
+          <ShoppingBag className="h-16 w-16 text-muted-foreground/50 mb-4" />
+          <h3 className="text-lg font-medium text-foreground mb-2">Your cart is empty</h3>
+          <p className="text-muted-foreground text-center mb-6 max-w-[280px]">
+            Looks like you haven't added any products to your cart yet.
+          </p>
+          <Button onClick={handleClose} className="gap-2">
+            <ShoppingBag className="h-4 w-4" />
+            Continue Shopping
+          </Button>
+        </div>
+      );
+    }
+
+    return (
+      <div className="p-6">
+        <AnimatePresence>
+          {cartItems.map((item) => (
+            <div key={item.id} className="border-b last:border-b-0">
+              <CartItemCard
+                item={item}
+                onRemove={() => handleRemoveFromCart(item.id)}
+                onUpdateQuantity={(quantity) => updateQuantity(item.id, quantity)}
+                onSaveForLater={() => handleSaveForLater(item.id)}
+              />
+            </div>
+          ))}
+        </AnimatePresence>
+      </div>
+    );
+  };
+
+  const renderSavedItems = () => {
+    if (isLoading) {
+      return (
+        <div className="space-y-4">
+          {[1, 2].map((i) => (
+            <div key={i} className="flex gap-4 p-4 border rounded-lg">
+              <div className="bg-muted animate-pulse h-24 w-24 rounded-md" />
+              <div className="flex-1 space-y-2">
+                <div className="h-4 bg-muted rounded w-3/4 animate-pulse" />
+                <div className="h-3 bg-muted rounded w-1/4 animate-pulse" />
+                <div className="h-8 w-24 bg-muted rounded-md animate-pulse mt-2" />
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    if (!hasSavedItems) {
+      return (
+        <div className="flex flex-col items-center justify-center py-12 px-4">
+          <Heart className="h-16 w-16 text-muted-foreground/50 mb-4" />
+          <h3 className="text-lg font-medium text-foreground mb-2">No saved items</h3>
+          <p className="text-muted-foreground text-center mb-6 max-w-[280px]">
+            Save items you like to buy them later.
+          </p>
+          <Button 
+            variant="outline" 
+            onClick={() => setActiveTab('cart')}
+            className="gap-2"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Cart
+          </Button>
+        </div>
+      );
+    }
+
+    return (
+      <div className="p-6">
+        <AnimatePresence>
+          {savedItems.map((item) => (
+            <div key={item.id} className="border-b last:border-b-0">
+              <CartItemCard
+                item={item}
+                isSavedItem
+                onRemove={() => handleRemoveSavedItem(item.id)}
+                onMoveToCart={() => handleMoveToCart(item)}
+              />
+            </div>
+          ))}
+        </AnimatePresence>
+      </div>
+    );
+  };

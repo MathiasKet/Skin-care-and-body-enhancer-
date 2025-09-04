@@ -1,57 +1,93 @@
-import { Switch, Route } from "wouter";
-import { QueryClientProvider } from "@tanstack/react-query";
-import { queryClient } from "./lib/queryClient";
-import { Toaster } from "@/components/ui/toaster";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import NotFound from "@/pages/not-found";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
-import HomePage from "@/pages/HomePage";
-import ShopPage from "@/pages/ShopPage";
-import ProductPage from "@/pages/ProductPage";
-import CartPage from "@/pages/CartPage";
-import CheckoutPage from "@/pages/CheckoutPage";
-import AboutPage from "@/pages/AboutPage";
-import ConsultationPage from "@/pages/ConsultationPage";
-import ShippingPage from "@/pages/ShippingPage";
+import { useState } from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
+import { Toaster } from "./components/ui/toaster";
+import { TooltipProvider } from "./components/ui/tooltip";
+import NotFound from "./pages/not-found";
+import Header from "./components/layout/Header";
+import Footer from "./components/layout/Footer";
+import HomePage from "./pages/HomePage";
+import ShopPage from "./pages/ShopPage";
+import ProductPage from "./pages/ProductPage";
+import CartPage from "./pages/CartPage";
+import CheckoutPage from "./pages/CheckoutPage";
+import AboutPage from "./pages/AboutPage";
+import ConsultationPage from "./pages/ConsultationPage";
+import ShippingPage from "./pages/ShippingPage";
 import { CartSidebar } from "./components/cart/CartSidebar";
-import { CartProvider } from "./components/cart/CartProvider";
+import { useCart } from "./components/cart/CartProvider";
+import { AdminAuthProvider } from "./contexts/AdminAuthContext";
+import LoginPage from "./pages/admin/LoginPage";
+import DashboardPage from "./pages/admin/DashboardPage";
+import ProtectedRoute from "./components/admin/ProtectedRoute";
 
-function Router() {
+function AdminRoutes() {
   return (
-    <Switch>
-      <Route path="/" component={HomePage} />
-      <Route path="/shop" component={ShopPage} />
-      <Route path="/shop/:category" component={ShopPage} />
-      <Route path="/product/:id" component={ProductPage} />
-      <Route path="/cart" component={CartPage} />
-      <Route path="/checkout" component={CheckoutPage} />
-      <Route path="/about" component={AboutPage} />
-      <Route path="/consultation" component={ConsultationPage} />
-      <Route path="/shipping" component={ShippingPage} />
-      <Route component={NotFound} />
-    </Switch>
+    <AdminAuthProvider>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/" element={
+          <ProtectedRoute>
+            <DashboardPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/dashboard" element={
+          <ProtectedRoute>
+            <DashboardPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/products" element={
+          <ProtectedRoute>
+            <div>Products Management</div>
+          </ProtectedRoute>
+        } />
+        <Route path="/orders" element={
+          <ProtectedRoute>
+            <div>Orders Management</div>
+          </ProtectedRoute>
+        } />
+        <Route path="/customers" element={
+          <ProtectedRoute>
+            <div>Customers Management</div>
+          </ProtectedRoute>
+        } />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </AdminAuthProvider>
   );
 }
 
 function App() {
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const location = useLocation();
+
   return (
-    <QueryClientProvider client={queryClient}>
-      <CartProvider>
-        <TooltipProvider>
-          <Header />
-          <main>
-            <Router />
-          </main>
-          <Footer />
-          <CartSidebar />
-          <Toaster />
-          <a href="https://wa.me/233302123456" className="fixed bottom-6 right-6 bg-green-500 text-white rounded-full p-3 shadow-lg hover:bg-green-600 transition z-50">
-            <i className="fab fa-whatsapp text-2xl"></i>
-          </a>
-        </TooltipProvider>
-      </CartProvider>
-    </QueryClientProvider>
+    <TooltipProvider>
+      <div className="min-h-screen flex flex-col">
+        <Header onCartOpenChange={setIsCartOpen} />
+        <main className="flex-grow">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/shop" element={<ShopPage />} />
+            <Route path="/shop/:category" element={<ShopPage />} />
+            <Route path="/product/:id" element={<ProductPage />} />
+            <Route path="/cart" element={<CartPage />} />
+            <Route path="/checkout" element={<CheckoutPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/consultation" element={<ConsultationPage />} />
+            <Route path="/shipping" element={<ShippingPage />} />
+            <Route path="/admin/*" element={<AdminRoutes />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </main>
+        <Footer />
+        <CartSidebar 
+          isOpen={isCartOpen} 
+          onClose={() => setIsCartOpen(false)} 
+          closeCart={() => setIsCartOpen(false)} 
+        />
+        <Toaster />
+      </div>
+    </TooltipProvider>
   );
 }
 

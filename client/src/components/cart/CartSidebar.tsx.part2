@@ -1,0 +1,149 @@
+  return (
+    <Sheet open={isOpenInternal} onOpenChange={setIsOpenInternal}>
+      <SheetContent side="right" className="w-full sm:max-w-md p-0 flex flex-col">
+        <SheetHeader className="border-b px-6 py-4">
+          <div className="flex items-center justify-between">
+            <SheetTitle className="text-xl font-bold">
+              {activeTab === 'cart' ? 'Your Cart' : 'Saved Items'}
+            </SheetTitle>
+            <button 
+              onClick={handleClose}
+              className="rounded-full p-1.5 hover:bg-accent transition-colors"
+              aria-label="Close cart"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+          
+          {/* Tabs */}
+          <div className="flex border-b -mx-6 px-6 mt-4">
+            <button
+              className={`flex-1 py-3 font-medium text-sm ${
+                activeTab === 'cart' 
+                  ? 'text-primary border-b-2 border-primary' 
+                  : 'text-muted-foreground'
+              }`}
+              onClick={() => setActiveTab('cart')}
+            >
+              Cart {hasItems && `(${cartItems.reduce((acc, item) => acc + ('quantity' in item ? item.quantity : 1), 0)})`}
+            </button>
+            <button
+              className={`flex-1 py-3 font-medium text-sm ${
+                activeTab === 'saved' 
+                  ? 'text-primary border-b-2 border-primary' 
+                  : 'text-muted-foreground'
+              }`}
+              onClick={() => setActiveTab('saved')}
+            >
+              Saved {hasSavedItems && `(${savedItems.length})`}
+            </button>
+          </div>
+        </SheetHeader>
+        
+        <div className="flex-1 overflow-y-auto">
+          {activeTab === 'cart' ? renderCartItems() : renderSavedItems()}
+        </div>
+        
+        {activeTab === 'cart' && (
+          <div className="border-t bg-muted/30">
+            {/* Promo Code Section */}
+            <div className="p-4 border-b">
+              <div className="flex items-center gap-2">
+                <Tag className="h-4 w-4 text-muted-foreground" />
+                <p className="text-sm text-muted-foreground">Promo Code</p>
+              </div>
+              {promoApplied ? (
+                <div className="flex items-center justify-between mt-2 p-2 bg-green-50 rounded-md">
+                  <div className="flex items-center gap-2">
+                    <Check className="h-4 w-4 text-green-500" />
+                    <span className="text-sm font-medium text-green-800">
+                      Promo code applied! {discount}% off
+                    </span>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-green-600 hover:text-green-800 h-8 px-2"
+                    onClick={removePromoCode}
+                  >
+                    Remove
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex gap-2 mt-2">
+                  <Input
+                    type="text"
+                    placeholder="Enter promo code"
+                    value={promoCode}
+                    onChange={(e) => setPromoCode(e.target.value)}
+                    className="flex-1 h-9"
+                  />
+                  <Button 
+                    type="button" 
+                    variant="outline"
+                    onClick={applyPromoCode}
+                    disabled={isLoading || !promoCode.trim()}
+                  >
+                    {isLoading ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      'Apply'
+                    )}
+                  </Button>
+                </div>
+              )}
+            </div>
+            
+            {/* Order Summary */}
+            <div className="p-4 space-y-3">
+              <div className="flex justify-between">
+                <span className="text-sm text-muted-foreground">Subtotal</span>
+                <span className="font-medium">GH₵{subtotal.toFixed(2)}</span>
+              </div>
+              {discount > 0 && (
+                <div className="flex justify-between text-green-600">
+                  <span className="text-sm">Discount ({discount}%)</span>
+                  <span className="font-medium">-GH₵{(subtotal * (discount / 100)).toFixed(2)}</span>
+                </div>
+              )}
+              <div className="flex justify-between">
+                <span className="text-sm text-muted-foreground">Shipping</span>
+                <span className="font-medium">
+                  {subtotal >= 100 || subtotal === 0 ? 'Free' : 'GH₵10.00'}
+                </span>
+              </div>
+              <div className="h-px bg-border my-2" />
+              <div className="flex justify-between font-bold text-lg">
+                <span>Total</span>
+                <span>GH₵{total.toFixed(2)}</span>
+              </div>
+              
+              <Button 
+                className="w-full h-12 mt-4" 
+                size="lg"
+                onClick={handleCheckout}
+                disabled={!hasItems || isCheckingOut}
+              >
+                {isCheckingOut ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Processing...
+                  </>
+                ) : (
+                  <>
+                    Checkout
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </>
+                )}
+              </Button>
+              
+              <p className="text-xs text-muted-foreground text-center mt-2">
+                By placing your order, you agree to our Terms of Service and Privacy Policy.
+              </p>
+            </div>
+          </div>
+        )}
+      </SheetContent>
+    </Sheet>
+  );
+};
