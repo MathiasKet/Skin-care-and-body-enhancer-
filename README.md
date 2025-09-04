@@ -2,10 +2,10 @@
 
 A modern e-commerce platform for skin care and body enhancement products, built with React, TypeScript, Vite, and Supabase.
 
-## 🚀 Deployment Instructions (Netlify)
+## 🚀 Deployment Instructions (Vercel)
 
 ### Prerequisites
-- Netlify account
+- Vercel account
 - Supabase project with database configured
 - Node.js (v18 or higher)
 
@@ -27,20 +27,19 @@ VITE_SUPABASE_URL=your_supabase_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
-### 4. Deploy to Netlify
+### 4. Deploy to Vercel
 1. Push your code to a GitHub/GitLab/Bitbucket repository
-2. Log in to [Netlify](https://www.netlify.com/)
-3. Click on "Add new site" > "Import an existing project"
-4. Connect to your Git provider and select the repository
-5. Configure the build settings:
-   - Build command: `npm run build`
-   - Publish directory: `dist`
-6. Add environment variables from your `.env` file
-7. Click "Deploy site"
+2. Log in to [Vercel](https://vercel.com/)
+3. Click on "Add New" > "Project"
+4. Import your Git repository
+5. Vercel will automatically detect it's a Vercel project
+6. Add your environment variables
+7. Click "Deploy"
 
 ### 5. Configure Domain (Optional)
-1. Go to "Domain settings" in your Netlify dashboard
-2. Click "Add custom domain" and follow the instructions
+1. Go to your project in the Vercel dashboard
+2. Navigate to "Domains"
+3. Add your custom domain and follow the verification steps
 
 ## 🛠 Development
 
