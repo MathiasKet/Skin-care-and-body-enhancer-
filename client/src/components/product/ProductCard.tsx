@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Product } from '@/types';
+import { useState } from 'react';
 
 interface ProductCardProps {
   product: Product;
@@ -7,15 +8,20 @@ interface ProductCardProps {
 
 const ProductCard = ({ product }: ProductCardProps) => {
   const hasDiscount = product.originalPrice && product.originalPrice > product.price;
+  const [imageSrc, setImageSrc] = useState(product.image);
 
   return (
     <div className="group relative bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200">
       <Link to={`/products/${product.slug}`} className="block">
         <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden bg-gray-100">
           <img
-            src={product.image}
+            src={imageSrc}
             alt={product.name}
             className="h-64 w-full object-cover object-center group-hover:opacity-90 transition-opacity"
+            onError={() => {
+              console.log('Product image failed to load, using fallback');
+              setImageSrc('/favicon.jpg');
+            }}
           />
         </div>
         <div className="p-4">

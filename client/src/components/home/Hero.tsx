@@ -1,6 +1,14 @@
 import { Link } from "wouter";
+import { useState } from 'react';
 
 const Hero = () => {
+  const [imgSrc, setImgSrc] = useState('/images/Beauthgirl2.jpg');
+
+  const handleImageError = () => {
+    console.log('Image not found, using fallback');
+    setImgSrc('/favicon.jpg');
+  };
+
   return (
     <section className="relative bg-neutral py-8 md:py-12">
       <div className="container mx-auto px-4 relative z-10">
@@ -27,14 +35,10 @@ const Hero = () => {
           </div>
           <div className="w-full md:w-5/12 rounded-xl overflow-hidden shadow-lg">
             <img 
-              src="/images/Beauthgirl2.jpg" 
+              src={imgSrc}
               alt="Beautiful woman with glowing skin" 
               className="w-full h-auto object-cover rounded-lg max-h-[400px]"
-              onError={(e) => {
-                console.error('Image failed to load:', e.currentTarget.src);
-                // Fallback to a placeholder if needed
-                e.currentTarget.src = 'https://via.placeholder.com/800x600?text=Beauty+Product';
-              }}
+              onError={handleImageError}
               loading="lazy"
             />
           </div>

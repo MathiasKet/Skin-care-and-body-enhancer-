@@ -31,6 +31,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const { addToCart } = useCart();
   const { toast } = useToast();
   const [isHovered, setIsHovered] = useState(false);
+  const [imageSrc, setImageSrc] = useState(product.image);
   
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault(); // Prevent navigation when clicking the button
@@ -83,9 +84,13 @@ const ProductCard = ({ product }: ProductCardProps) => {
           {/* Product Image */}
           <div className="relative w-full h-full">
             <img 
-              src={product.image} 
+              src={imageSrc} 
               alt={product.name} 
-              className={`w-full h-full object-cover transition-transform duration-500 ${isHovered ? 'scale-105' : 'scale-100'}`} 
+              className={`w-full h-full object-cover transition-transform duration-500 ${isHovered ? 'scale-105' : 'scale-100'}`}
+              onError={() => {
+                console.log('Product image failed to load, using fallback');
+                setImageSrc('/favicon.jpg');
+              }}
             />
             
             {/* Sale Badge */}
