@@ -15,11 +15,11 @@ function getApiUrl(path: string): string {
   return `${baseUrl}${normalizedPath}`;
 }
 
-export async function apiRequest(
+export async function apiRequest<T = any>(
   method: string,
   url: string,
-  data?: unknown | undefined,
-): Promise<Response> {
+  data?: unknown,
+): Promise<T> {
   const apiUrl = getApiUrl(url);
   const res = await fetch(apiUrl, {
     method,
@@ -28,8 +28,17 @@ export async function apiRequest(
     credentials: "include",
   });
 
-  await throwIfResNotOk(res);
-  return res;
+  if (!res.ok) {
+    const error = await res.text().catch(() => res.statusText);
+    throw new Error(`API request failed: ${res.status} ${error}`);
+  }
+  
+  // Return JSON for non-empty responses
+  if (res.status !== 204) { // 204 No Content
+    return res.json();
+  }
+  
+  return undefined as unknown as T;
 }
 
 type UnauthorizedBehavior = "returnNull" | "throw";
@@ -51,13 +60,31 @@ export const getQueryFn: <T>(options: {
     return await res.json();
   };
 
+// Default query function that will be used for all queries
+const defaultQueryFn: QueryFunction = async ({ queryKey }) => {
+  const [url] = queryKey as [string];
+  const apiUrl = getApiUrl(url);
+  const res = await fetch(apiUrl, {
+    credentials: "include",
+  });
+
+  if (!res.ok) {
+    if (res.status === 401) {
+      // Handle unauthorized
+      throw new Error('Unauthorized');
+    }
+    throw new Error('Network response was not ok');
+  }
+  
+  return res.json();
+};
+
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      queryFn: getQueryFn({ on401: "throw" }),
-      refetchInterval: false,
+      queryFn: defaultQueryFn,
       refetchOnWindowFocus: false,
-      staleTime: Infinity,
+      staleTime: 5 * 60 * 1000, // 5 minutes
       retry: false,
     },
     mutations: {

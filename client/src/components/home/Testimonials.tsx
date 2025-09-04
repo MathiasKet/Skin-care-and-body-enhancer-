@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 
-interface Testimonial {
+export interface Testimonial {
   id: number;
   rating: number;
   text: string;
@@ -12,7 +12,7 @@ interface Testimonial {
 }
 
 const Testimonials = () => {
-  const { data: testimonials, isLoading } = useQuery<Testimonial[]>({
+  const { data: testimonials = [], isLoading } = useQuery<Testimonial[]>({
     queryKey: ['/api/testimonials'],
   });
   

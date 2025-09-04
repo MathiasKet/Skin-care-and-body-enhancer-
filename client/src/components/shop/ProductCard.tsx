@@ -4,7 +4,7 @@ import { useCart } from "../cart/CartProvider";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 
-interface Product {
+export interface Product {
   id: number;
   name: string;
   slug: string;

@@ -1,10 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import ProductCard from "../shop/ProductCard";
+import type { Product } from "../shop/ProductCard";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const BestSellers = () => {
-  const { data: bestSellers, isLoading } = useQuery({
+  const { data: bestSellers = [], isLoading } = useQuery<Product[]>({
     queryKey: ['/api/products/bestsellers'],
   });
   
@@ -13,10 +14,11 @@ const BestSellers = () => {
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-3xl font-bold font-heading text-primary">Best Sellers</h2>
-          <Link href="/shop?sort=popularity">
-            <a className="text-accent hover:text-accent-dark font-medium inline-flex items-center transition">
-              View All <i className="fas fa-arrow-right ml-2"></i>
-            </a>
+          <Link 
+            href="/shop?sort=popularity"
+            className="text-accent hover:text-accent-dark font-medium inline-flex items-center transition"
+          >
+            View All <i className="fas fa-arrow-right ml-2"></i>
           </Link>
         </div>
         
