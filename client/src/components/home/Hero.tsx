@@ -7,17 +7,50 @@ const Hero = () => {
   useEffect(() => {
     // Try to load the image first
     const img = new Image();
-    img.src = '/images/Beauthgirl2.jpg';
+    // In Vite, public assets should be referenced from the root in both dev and prod
+    const imagePath = '/images/Beauthgirl2.jpg';
+    
+    // Create a URL object to handle the path resolution
+    const imageUrl = new URL(imagePath, import.meta.url).href;
+    
+    img.src = imagePath;
     
     img.onload = () => {
       // If image loads successfully, use it
-      setImgSrc('/images/Beauthgirl2.jpg');
+      setImgSrc(imagePath);
     };
     
     img.onerror = () => {
-      // If image fails to load, use fallback
-      console.log('Hero image not found, using fallback');
-      setImgSrc('/favicon.jpg');
+      // If image fails to load, try alternative paths
+      console.log('Hero image not found at', imagePath, 'trying fallback...');
+      
+      // Try alternative paths
+      const fallbackPaths = [
+        '/favicon.jpg',
+        '/client/public/favicon.jpg'
+      ];
+      
+      const tryNextFallback = (index = 0) => {
+        if (index >= fallbackPaths.length) {
+          console.error('All fallback images failed to load');
+          return;
+        }
+        
+        const fallbackImg = new Image();
+        fallbackImg.src = fallbackPaths[index];
+        
+        fallbackImg.onload = () => {
+          console.log('Using fallback image:', fallbackPaths[index]);
+          setImgSrc(fallbackPaths[index]);
+        };
+        
+        fallbackImg.onerror = () => {
+          console.log('Fallback image failed:', fallbackPaths[index]);
+          tryNextFallback(index + 1);
+        };
+      };
+      
+      tryNextFallback();
     };
   }, []);
   
