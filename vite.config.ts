@@ -23,7 +23,7 @@ const copyRedirectsPlugin = () => ({
 });
 
 export default defineConfig({
-  base: './', // Use relative paths for assets
+  base: '/', // Use root-relative paths for Vercel
   plugins: [
     react(),
     runtimeErrorOverlay(),
@@ -50,6 +50,7 @@ export default defineConfig({
     outDir: path.resolve(import.meta.dirname, "dist"),
     emptyOutDir: true,
     assetsDir: 'assets',
+    sourcemap: true,
     rollupOptions: {
       output: {
         manualChunks: {
