@@ -4,10 +4,51 @@ import ProductCard from "../shop/ProductCard";
 import type { Product } from "../shop/ProductCard";
 import { Skeleton } from "@/components/ui/skeleton";
 
+// Mock data for new arrivals using placeholder product images
+const mockNewArrivals: Product[] = [
+  {
+    id: 10,
+    name: 'Niacinamide Serum',
+    slug: 'niacinamide-serum',
+    description: '10% Niacinamide for blemish-prone skin',
+    price: 29.99,
+    originalPrice: 39.99,
+    image: 'https://via.placeholder.com/400x400?text=Niacinamide+Serum',
+    rating: 4.8,
+    reviewCount: 215,
+    isNew: true,
+    brand: 'PureSkin',
+    category: 'Serum',
+    skinConcerns: ['acne', 'pores', 'uneven tone'],
+    skinTypes: ['oily', 'combination', 'acne-prone']
+  },
+  {
+    id: 11,
+    name: 'Retinol Night Cream',
+    slug: 'retinol-night-cream',
+    description: 'Anti-aging cream with 1% retinol',
+    price: 42.99,
+    originalPrice: 49.99,
+    image: 'https://via.placeholder.com/400x400?text=Retinol+Night+Cream',
+    rating: 4.9,
+    reviewCount: 178,
+    isNew: true,
+    brand: 'AgeDefy',
+    category: 'Night Cream',
+    skinConcerns: ['fine lines', 'wrinkles', 'aging'],
+    skinTypes: ['all']
+  },
+  // Add more mock products as needed
+];
+
 const NewArrivals = () => {
-  const { data: newArrivals = [], isLoading } = useQuery<Product[]>({
+  const { data: newArrivals = mockNewArrivals, isLoading } = useQuery<Product[]>({
     queryKey: ['/api/products/new-arrivals'],
+    retry: 1,
   });
+  
+  // Use the mock data if the API call fails
+  const displayedProducts = newArrivals || mockNewArrivals;
   
   return (
     <section className="py-12 bg-neutral">
@@ -39,7 +80,7 @@ const NewArrivals = () => {
               </div>
             ))
           ) : (
-            newArrivals?.map((product) => (
+            displayedProducts.map((product: Product) => (
               <ProductCard key={product.id} product={product} />
             ))
           )}

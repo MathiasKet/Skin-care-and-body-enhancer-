@@ -26,11 +26,12 @@ const ConsultationPromo = () => {
                 <span>Ongoing support via WhatsApp</span>
               </li>
             </ul>
-            <Link href="/consultation">
-              <a className="bg-secondary hover:bg-secondary-dark text-white font-bold py-3 px-6 rounded-full transition duration-300 inline-flex items-center">
-                <span>Book Your FREE Consultation</span>
-                <i className="fas fa-arrow-right ml-2"></i>
-              </a>
+            <Link 
+              href="/consultation"
+              className="bg-secondary hover:bg-secondary-dark text-white font-bold py-3 px-6 rounded-full transition duration-300 inline-flex items-center"
+            >
+              <span>Book Your FREE Consultation</span>
+              <i className="fas fa-arrow-right ml-2"></i>
             </Link>
           </div>
           <div className="w-full md:w-1/2">
