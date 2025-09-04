@@ -1,13 +1,28 @@
 import { Link } from "wouter";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const Hero = () => {
-  const [imgSrc, setImgSrc] = useState('/images/Beauthgirl2.jpg');
+  const [imgSrc, setImgSrc] = useState('');
 
-  const handleImageError = () => {
-    console.log('Image not found, using fallback');
-    setImgSrc('/favicon.jpg');
-  };
+  useEffect(() => {
+    // Try to load the image first
+    const img = new Image();
+    img.src = '/images/Beauthgirl2.jpg';
+    
+    img.onload = () => {
+      // If image loads successfully, use it
+      setImgSrc('/images/Beauthgirl2.jpg');
+    };
+    
+    img.onerror = () => {
+      // If image fails to load, use fallback
+      console.log('Hero image not found, using fallback');
+      setImgSrc('/favicon.jpg');
+    };
+  }, []);
+  
+  // Don't render the image until we know which source to use
+  if (!imgSrc) return null;
 
   return (
     <section className="relative bg-neutral py-8 md:py-12">
@@ -38,7 +53,6 @@ const Hero = () => {
               src={imgSrc}
               alt="Beautiful woman with glowing skin" 
               className="w-full h-auto object-cover rounded-lg max-h-[400px]"
-              onError={handleImageError}
               loading="lazy"
             />
           </div>
